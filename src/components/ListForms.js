@@ -9,6 +9,8 @@ import {
   CardMedia,
 } from "@material-ui/core";
 
+import { Link } from "react-router-dom";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -71,14 +73,17 @@ function ListForms() {
   return data.map((item) => (
     <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={item.id}>
       <Card>
-        <CardActionArea>
-          <CardMedia
-            className={classes.media}
-            image={item.image}
-            title="Imagen de formulario"
-          ></CardMedia>
-          <CardContent>{`Informacion del formulario ${item.id}`}</CardContent>
-        </CardActionArea>
+        <Link style={{ textDecoration: "none" }} to={`/main/${item.id}`}>
+          <CardActionArea>
+            <CardMedia
+              className={classes.media}
+              image={item.image}
+              title="Imagen de formulario"
+            ></CardMedia>
+            <CardContent>{`Informacion del formulario ${item.id}`}</CardContent>
+          </CardActionArea>
+        </Link>
+
         <CardActions className={classes.cardAction}>
           <Button size="small" color="primary">
             Preview

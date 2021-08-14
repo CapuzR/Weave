@@ -7,6 +7,7 @@ export const MainRouter = () => {
     <>
       <Switch>
         <Route exact path="/main" component={Main} />
+        <Route exact path="/main/:id" component={Main} />
       </Switch>
       <Redirect to="/main" />
     </>
