@@ -2,6 +2,6 @@ export default {
   onSignIn,
 };
 
-function onSignIn(input) {
+function onSignIn() {
   localStorage.setItem("user", "Usuario logueado");
 }
