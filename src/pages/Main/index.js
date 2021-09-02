@@ -57,6 +57,7 @@ function Main({ history }) {
         onAddedQuestion={onAddedQuestion}
         onSelectedQuestion={onSelectedQuestion}
         onDeleteQuestion={onDeleteQuestion}
+        onUpdateQuestion={onUpdateQuestion}
       />
     </div>
   ) : (
@@ -90,6 +91,10 @@ function Main({ history }) {
 
   function onDeleteQuestion(id) {
     return service.onDeleteQuestion({ state, id }).then(setState);
+  }
+
+  function onUpdateQuestion(question, type) {
+    return service.onUpdateQuestion({ state, question, type }).then(setState);
   }
 }
 

@@ -43,6 +43,7 @@ export default {
   onAddedQuestion,
   onSelectedQuestion,
   onDeleteQuestion,
+  onUpdateQuestion,
 };
 
 function init() {
@@ -72,9 +73,11 @@ function onAddedQuestion(input) {
 
 function onUpdateQuestion(input) {
   const index = input.state.questions.findIndex(
-    (item) => item.id === input.question.id
+    (item) => item.id === input.state.selectedQuestion.id
   );
-  input.state.questions[index] = input.question;
+  input.state.questions[index].question = input.question?.question;
+  input.state.questions[index].type = input.type?.type;
+  input.state.selectedQuestion = input.state.questions[index];
   return Promise.resolve(Object.assign({}, input.state));
 }
 

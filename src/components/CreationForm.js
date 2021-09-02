@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -75,11 +76,15 @@ const useStyles = makeStyles((theme) => ({
 
 function CreationForm(props) {
   const classes = useStyles();
+  const [questionValue, setQuestion] = useState();
+  const [type, setType] = useState("short answer");
 
   return (
     <Dialog
       open={props.openDialog}
-      onClose={() => props.setOpenDialog(false)}
+      onClose={() => {
+        props.setOpenDialog(false);
+      }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -120,6 +125,13 @@ function CreationForm(props) {
                     id="filled-basic"
                     label="Pregunta"
                     variant="filled"
+                    value={questionValue}
+                    onChange={(event) =>
+                      props.onUpdateQuestion({
+                        question: event.target.value,
+                        type: "",
+                      })
+                    }
                     disabled={
                       !(props.state.selectedQuestion.id === question.id)
                     }
@@ -139,11 +151,11 @@ function CreationForm(props) {
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={10}
-                      //   onChange={handleChange}
+                      value={type}
+                      onChange={(event) => setType(event.target.value)}
                       label="Tipo de pregunta"
                     >
-                      <MenuItem value={10}>Texto corto</MenuItem>
+                      <MenuItem value={type}>Texto corto</MenuItem>
                       <MenuItem value={20} disabled>
                         Selección simple
                       </MenuItem>
@@ -197,7 +209,18 @@ function CreationForm(props) {
         <Button onClick={() => props.setOpenDialog(false)} color="primary">
           Disagree
         </Button>
-        <Button onClick={() => props.setOpenDialog(false)} color="primary">
+        <Button
+          onClick={() =>
+            console.log({
+              form: {
+                name: "Formulario sin titulo",
+                description: "Descripcion del formulario",
+                questions: props.state.questions,
+              },
+            })
+          }
+          color="primary"
+        >
           Agree
         </Button>
       </DialogActions>
