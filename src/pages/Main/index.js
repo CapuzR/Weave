@@ -45,13 +45,19 @@ function Main({ history }) {
             onSelected={onSelectedForm}
             onDelete={onDeleteForm}
           />
-          ]
         </Grid>
       </div>
       <Fab color="primary" aria-label="add" className={classes.fab}>
         <AddIcon onClick={() => setOpenDialog(true)} />
       </Fab>
-      <CreationForm openDialog={openDialog} setOpenDialog={setOpenDialog} />
+      <CreationForm
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        state={state}
+        onAddedQuestion={onAddedQuestion}
+        onSelectedQuestion={onSelectedQuestion}
+        onDeleteQuestion={onDeleteQuestion}
+      />
     </div>
   ) : (
     <div>Cargando . . .</div>
@@ -72,6 +78,18 @@ function Main({ history }) {
 
   function onDeleteForm(id) {
     return service.onDeleteForm({ state, id }).then(setState);
+  }
+
+  function onAddedQuestion(question) {
+    return service.onAddedQuestion({ state, question }).then(setState);
+  }
+
+  function onSelectedQuestion(question) {
+    return service.onSelectedQuestion({ state, question }).then(setState);
+  }
+
+  function onDeleteQuestion(id) {
+    return service.onDeleteQuestion({ state, id }).then(setState);
   }
 }
 

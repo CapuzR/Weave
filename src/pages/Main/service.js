@@ -31,6 +31,8 @@ const state = {
   ],
   selectedForm: undefined,
   user: localStorage.getItem("user"),
+  questions: [],
+  selectedQuestion: undefined,
 };
 
 export default {
@@ -38,6 +40,9 @@ export default {
   onSignOut,
   onSelectedForm,
   onDeleteForm,
+  onAddedQuestion,
+  onSelectedQuestion,
+  onDeleteQuestion,
 };
 
 function init() {
@@ -56,5 +61,31 @@ function onSelectedForm(input) {
 
 function onDeleteForm(input) {
   input.state.forms = input.state.forms.filter((item) => item.id !== input.id);
+  return Promise.resolve(Object.assign({}, input.state));
+}
+
+function onAddedQuestion(input) {
+  input.state.questions.push(input.question);
+  onSelectedQuestion({ state: input.state, question: input.question });
+  return Promise.resolve(Object.assign({}, input.state));
+}
+
+function onUpdateQuestion(input) {
+  const index = input.state.questions.findIndex(
+    (item) => item.id === input.question.id
+  );
+  input.state.questions[index] = input.question;
+  return Promise.resolve(Object.assign({}, input.state));
+}
+
+function onSelectedQuestion(input) {
+  input.state.selectedQuestion = input.question;
+  return Promise.resolve(Object.assign({}, input.state));
+}
+
+function onDeleteQuestion(input) {
+  input.state.questions = input.state.questions.filter(
+    (item) => item.id !== input.id
+  );
   return Promise.resolve(Object.assign({}, input.state));
 }

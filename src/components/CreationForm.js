@@ -18,6 +18,7 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "10px",
   },
   containerItem: {
-    height: "120px",
+    height: "130px",
     padding: "8px",
     borderRadius: "8px",
     marginBottom: "8px",
@@ -50,9 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
   question: {
     width: "50%",
-    // border: "solid 1px",
     marginRight: "8px",
-    // padding: "12px",
   },
   typeQuestions: {
     width: "50%",
@@ -66,10 +65,17 @@ const useStyles = makeStyles((theme) => ({
   duplicateIcon: {
     marginLeft: "auto",
   },
+  addQuestionContainer: {
+    bottom: "0px",
+    position: "sticky",
+    display: "flex",
+    justifyContent: "center",
+  },
 }));
 
 function CreationForm(props) {
   const classes = useStyles();
+
   return (
     <Dialog
       open={props.openDialog}
@@ -90,95 +96,108 @@ function CreationForm(props) {
           Descripción del formulario
         </div>
       </DialogTitle>
-      <DialogContent className={classes.container}>
-        <Paper elevation={3}>
-          <div className={classes.containerItem}>
-            <div className={classes.containerQuestion}>
-              <div className={classes.question}>
-                <TextField
-                  id="filled-basic"
-                  label="Pregunta"
-                  variant="filled"
-                />
-              </div>
-              <div className={classes.typeQuestions}>
-                <FormControl variant="outlined" fullWidth>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tipo de pregunta
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={10}
-                    //   onChange={handleChange}
-                    label="Tipo de pregunta"
+      <DialogContent
+        className={classes.container}
+        id="creation-forms-container"
+      >
+        {props.state.questions.map((question) => (
+          <Paper
+            key={question.id}
+            elevation={props.state.selectedQuestion.id === question.id ? 5 : 1}
+            className={classes.paper}
+            onClick={() => props.onSelectedQuestion(question)}
+            style={{
+              cursor:
+                props.state.selectedQuestion.id === question.id
+                  ? ""
+                  : "pointer",
+            }}
+          >
+            <div className={classes.containerItem}>
+              <div className={classes.containerQuestion}>
+                <div className={classes.question}>
+                  <TextField
+                    id="filled-basic"
+                    label="Pregunta"
+                    variant="filled"
+                    disabled={
+                      !(props.state.selectedQuestion.id === question.id)
+                    }
+                  />
+                </div>
+                <div className={classes.typeQuestions}>
+                  <FormControl
+                    variant="outlined"
+                    fullWidth
+                    disabled={
+                      !(props.state.selectedQuestion.id === question.id)
+                    }
                   >
-                    <MenuItem value={10}>Texto corto</MenuItem>
-                    <MenuItem value={20} disabled>
-                      Selección simple
-                    </MenuItem>
-                    <MenuItem value={30} disabled>
-                      Selección multiple
-                    </MenuItem>
-                  </Select>
-                </FormControl>
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Tipo de pregunta
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={10}
+                      //   onChange={handleChange}
+                      label="Tipo de pregunta"
+                    >
+                      <MenuItem value={10}>Texto corto</MenuItem>
+                      <MenuItem value={20} disabled>
+                        Selección simple
+                      </MenuItem>
+                      <MenuItem value={30} disabled>
+                        Selección multiple
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
               </div>
-            </div>
-            <div className={classes.containerActions}>
-              <IconButton disabled className={classes.duplicateIcon}>
-                <FileCopyIcon />
-              </IconButton>
-              <IconButton>
-                <DeleteIcon />
-              </IconButton>
-            </div>
-          </div>
-        </Paper>
-        <Paper>
-          <div className={classes.containerItem}>
-            <div className={classes.containerQuestion}>
-              <div className={classes.question}>
-                <TextField
-                  id="filled-basic"
-                  label="Pregunta"
-                  variant="filled"
-                />
-              </div>
-              <div className={classes.typeQuestions}>
-                <FormControl variant="outlined" fullWidth>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tipo de pregunta
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={10}
-                    //   onChange={handleChange}
-                    label="Tipo de pregunta"
+              {props.state.selectedQuestion.id === question.id ? (
+                <div className={classes.containerActions}>
+                  <IconButton disabled className={classes.duplicateIcon}>
+                    <FileCopyIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => props.onDeleteQuestion(question.id)}
                   >
-                    <MenuItem value={10}>Texto corto</MenuItem>
-                    <MenuItem value={20} disabled>
-                      Selección simple
-                    </MenuItem>
-                    <MenuItem value={30} disabled>
-                      Selección multiple
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              </div>
+                    <DeleteIcon />
+                  </IconButton>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
-          </div>
-        </Paper>
+          </Paper>
+        ))}
+        <div className={classes.addQuestionContainer}>
+          <IconButton
+            color="primary"
+            onClick={() => {
+              props.onAddedQuestion({
+                id: props.state.questions.length,
+                question: "",
+                type: "",
+              });
+
+              document
+                .getElementById("creation-forms-container")
+                .scrollTo(
+                  0,
+                  document.getElementById("creation-forms-container")
+                );
+            }}
+          >
+            <AddCircleIcon color="primary" />
+          </IconButton>
+        </div>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => props.setOpenDialog(false)} color="primary">
           Disagree
         </Button>
-        <Button
-          onClick={() => props.setOpenDialog(false)}
-          color="primary"
-          autoFocus
-        >
+        <Button onClick={() => props.setOpenDialog(false)} color="primary">
           Agree
         </Button>
       </DialogActions>
