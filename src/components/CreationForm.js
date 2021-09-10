@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-
 import {
   IconButton,
-  Button,
   TextField,
   FormControl,
   InputLabel,
@@ -16,7 +9,6 @@ import {
   MenuItem,
   Paper,
 } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -76,44 +68,21 @@ const useStyles = makeStyles((theme) => ({
 
 function CreationForm(props) {
   const classes = useStyles();
-  const [questionValue, setQuestion] = useState();
+  const [questionValue] = useState();
   const [type, setType] = useState("short answer");
 
   return (
-    <Dialog
-      open={props.openDialog}
-      onClose={() => {
-        props.setOpenDialog(false);
-      }}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        <div className={classes.formTitle}>
-          Formulario sin titulo
-          <div className={classes.containerEditTitlett}>
-            <IconButton color="primary">
-              <EditIcon color="primary" />
-            </IconButton>
-          </div>
-        </div>
-        <div className={classes.formDescription}>
-          Descripción del formulario
-        </div>
-      </DialogTitle>
-      <DialogContent
-        className={classes.container}
-        id="creation-forms-container"
-      >
-        {props.state.questions.map((question) => (
+    <>
+      {props.state.questions.length > 0 ? (
+        props.state.questions.map((question) => (
           <Paper
             key={question.id}
-            elevation={props.state.selectedQuestion.id === question.id ? 5 : 1}
+            elevation={props.state.selectedQuestion?.id === question.id ? 5 : 1}
             className={classes.paper}
             onClick={() => props.onSelectedQuestion(question)}
             style={{
               cursor:
-                props.state.selectedQuestion.id === question.id
+                props.state.selectedQuestion?.id === question.id
                   ? ""
                   : "pointer",
             }}
@@ -133,7 +102,7 @@ function CreationForm(props) {
                       })
                     }
                     disabled={
-                      !(props.state.selectedQuestion.id === question.id)
+                      !(props.state.selectedQuestion?.id === question.id)
                     }
                   />
                 </div>
@@ -142,7 +111,7 @@ function CreationForm(props) {
                     variant="outlined"
                     fullWidth
                     disabled={
-                      !(props.state.selectedQuestion.id === question.id)
+                      !(props.state.selectedQuestion?.id === question.id)
                     }
                   >
                     <InputLabel id="demo-simple-select-outlined-label">
@@ -166,7 +135,7 @@ function CreationForm(props) {
                   </FormControl>
                 </div>
               </div>
-              {props.state.selectedQuestion.id === question.id ? (
+              {props.state.selectedQuestion?.id === question.id ? (
                 <div className={classes.containerActions}>
                   <IconButton disabled className={classes.duplicateIcon}>
                     <FileCopyIcon />
@@ -182,49 +151,29 @@ function CreationForm(props) {
               )}
             </div>
           </Paper>
-        ))}
-        <div className={classes.addQuestionContainer}>
-          <IconButton
-            color="primary"
-            onClick={() => {
-              props.onAddedQuestion({
-                id: props.state.questions.length,
-                question: "",
-                type: "",
-              });
-
-              document
-                .getElementById("creation-forms-container")
-                .scrollTo(
-                  0,
-                  document.getElementById("creation-forms-container")
-                );
-            }}
-          >
-            <AddCircleIcon color="primary" />
-          </IconButton>
-        </div>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => props.setOpenDialog(false)} color="primary">
-          Disagree
-        </Button>
-        <Button
-          onClick={() =>
-            console.log({
-              form: {
-                name: "Formulario sin titulo",
-                description: "Descripcion del formulario",
-                questions: props.state.questions,
-              },
-            })
-          }
+        ))
+      ) : (
+        <div>No hay preguntas</div>
+      )}
+      <div className={classes.addQuestionContainer}>
+        <IconButton
           color="primary"
+          onClick={() => {
+            props.onAddedQuestion({
+              id: props.state.questions.length,
+              question: "",
+              type: "",
+            });
+
+            document
+              .getElementById("creation-forms-container")
+              .scrollTo(0, document.getElementById("creation-forms-container"));
+          }}
         >
-          Agree
-        </Button>
-      </DialogActions>
-    </Dialog>
+          <AddCircleIcon color="primary" />
+        </IconButton>
+      </div>
+    </>
   );
 }
 

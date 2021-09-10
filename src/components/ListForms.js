@@ -44,7 +44,12 @@ function ListForms(props) {
     <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={item.id}>
       <Card>
         <Link style={{ textDecoration: "none" }} to={`/main/${item.id}`}>
-          <CardActionArea onClick={() => props.onSelected(item)}>
+          <CardActionArea
+            onClick={() => {
+              props.onSelected(item);
+              props.setOpenDialog(true);
+            }}
+          >
             <CardMedia
               className={classes.media}
               image={item.image}

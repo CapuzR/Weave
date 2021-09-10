@@ -7,7 +7,9 @@ import AddIcon from "@material-ui/icons/Add";
 import Header from "../../components/Header";
 import ListForms from "../../components/ListForms";
 import CreationForm from "../../components/CreationForm";
+import AnswerForm from "../../components/AnswerForm";
 import TabNavigation from "../../components/TabNavigation";
+import Modal from "../../components/Modal";
 
 import service from "./service";
 
@@ -47,6 +49,7 @@ function Main({ history }) {
               forms={state.forms}
               onSelected={onSelectedForm}
               onDelete={onDeleteForm}
+              setOpenDialog={setOpenDialog}
             />
           </Grid>
         ) : (
@@ -61,15 +64,35 @@ function Main({ history }) {
           }}
         />
       </Fab>
-      <CreationForm
+
+      {/* Modal */}
+
+      <Modal
         openDialog={openDialog}
-        setOpenDialog={setOpenDialog}
+        onClose={() => closeDialog()}
+        title={"Titulo por props"}
+        description={"descrption"}
+        onAccept={(form) =>
+          !state.selectedForm ? console.log(form) : alert("Respondido")
+        }
         state={state}
-        onAddedQuestion={onAddedQuestion}
-        onSelectedQuestion={onSelectedQuestion}
-        onDeleteQuestion={onDeleteQuestion}
-        onUpdateQuestion={onUpdateQuestion}
-      />
+      >
+        {state.selectedForm ? (
+          <AnswerForm
+            form={state.selectedForm}
+            onSelectedQuestion={onSelectedQuestion}
+            state={state}
+          />
+        ) : (
+          <CreationForm
+            state={state}
+            onAddedQuestion={onAddedQuestion}
+            onSelectedQuestion={onSelectedQuestion}
+            onDeleteQuestion={onDeleteQuestion}
+            onUpdateQuestion={onUpdateQuestion}
+          />
+        )}
+      </Modal>
     </div>
   ) : (
     <div>Cargando . . .</div>
@@ -110,6 +133,20 @@ function Main({ history }) {
 
   function onChangePage(page) {
     return service.onChangePage({ state, page }).then(setState);
+  }
+
+  function onClearQuestions() {
+    return service.onClearQuestions({ state }).then(setState);
+  }
+
+  function closeDialog() {
+    setOpenDialog(false);
+    onSelectedQuestion(undefined);
+    if (state.selectedForm) {
+      onSelectedForm(undefined);
+    } else {
+      onClearQuestions();
+    }
   }
 }
 
