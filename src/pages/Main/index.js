@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Header from "../../components/Header";
 import ListForms from "../../components/ListForms";
 import CreationForm from "../../components/CreationForm";
+import TabNavigation from "../../components/TabNavigation";
 
 import service from "./service";
 
@@ -39,16 +40,26 @@ function Main({ history }) {
     <div className={classes.root}>
       <Header onLogout={() => onSignOut()} />
       <div className={classes.container}>
-        <Grid container spacing={2}>
-          <ListForms
-            forms={state.forms}
-            onSelected={onSelectedForm}
-            onDelete={onDeleteForm}
-          />
-        </Grid>
+        <TabNavigation page={state.page} onChangePage={onChangePage} />
+        {state.page.name === "active" ? (
+          <Grid container spacing={2}>
+            <ListForms
+              forms={state.forms}
+              onSelected={onSelectedForm}
+              onDelete={onDeleteForm}
+            />
+          </Grid>
+        ) : (
+          <></>
+        )}
       </div>
       <Fab color="primary" aria-label="add" className={classes.fab}>
-        <AddIcon onClick={() => setOpenDialog(true)} />
+        <AddIcon
+          onClick={() => {
+            setOpenDialog(true);
+            onChangePage({ id: 0, name: "active" });
+          }}
+        />
       </Fab>
       <CreationForm
         openDialog={openDialog}
@@ -95,6 +106,10 @@ function Main({ history }) {
 
   function onUpdateQuestion(question, type) {
     return service.onUpdateQuestion({ state, question, type }).then(setState);
+  }
+
+  function onChangePage(page) {
+    return service.onChangePage({ state, page }).then(setState);
   }
 }
 

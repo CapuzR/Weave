@@ -33,6 +33,10 @@ const state = {
   user: localStorage.getItem("user"),
   questions: [],
   selectedQuestion: undefined,
+  page: {
+    id: 0,
+    name: "active",
+  },
 };
 
 export default {
@@ -44,6 +48,7 @@ export default {
   onSelectedQuestion,
   onDeleteQuestion,
   onUpdateQuestion,
+  onChangePage,
 };
 
 function init() {
@@ -91,4 +96,15 @@ function onDeleteQuestion(input) {
     (item) => item.id !== input.id
   );
   return Promise.resolve(Object.assign({}, input.state));
+}
+
+function onChangePage(input) {
+  return Promise.resolve(
+    Object.assign({}, input.state, {
+      page: {
+        id: input.page.id,
+        name: input.page.name,
+      },
+    })
+  );
 }
