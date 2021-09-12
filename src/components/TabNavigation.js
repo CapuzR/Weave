@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     width: "fit-content",
+    borderRadius: "8px",
   },
 }));
 

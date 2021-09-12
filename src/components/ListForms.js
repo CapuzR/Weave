@@ -12,8 +12,6 @@ import {
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
-import { Link } from "react-router-dom";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -62,6 +60,10 @@ function ListForms(props) {
             variant="outlined"
             color="primary"
             className={classes.shareBtn}
+            onClick={() => {
+              props.setOpenShareDialog(true);
+              props.onSelected(item);
+            }}
           >
             Shared
           </Button>

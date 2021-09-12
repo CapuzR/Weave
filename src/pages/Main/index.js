@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Header from "../../components/Header";
 import ListForms from "../../components/ListForms";
 import CreationForm from "../../components/CreationForm";
+import ShareForm from "../../components/ShareForm";
 import TabNavigation from "../../components/TabNavigation";
 import Modal from "../../components/Modal";
 
@@ -33,6 +34,7 @@ function Main({ history }) {
   const classes = useStyles();
   const [state, setState] = useState();
   const [openDialog, setOpenDialog] = useState(false);
+  const [openShareDialog, setOpenShareDialog] = useState(false);
   console.log(state);
   useEffect(() => {
     init();
@@ -48,6 +50,7 @@ function Main({ history }) {
               forms={state.forms}
               onSelected={onSelectedForm}
               onDelete={onDeleteForm}
+              setOpenShareDialog={setOpenShareDialog}
               setOpenDialog={setOpenDialog}
             />
           </Grid>
@@ -70,7 +73,7 @@ function Main({ history }) {
         />
       </Fab>
 
-      {/* Modal */}
+      {/* Modals */}
 
       <Modal
         openDialog={openDialog}
@@ -98,6 +101,22 @@ function Main({ history }) {
           onDeleteQuestion={onDeleteQuestion}
           onUpdateQuestion={onUpdateQuestion}
         />
+      </Modal>
+      <Modal
+        openDialog={openShareDialog}
+        onClose={() => {
+          setOpenShareDialog(false);
+          onSelectedForm(undefined);
+        }}
+        title={"Comparte tu formulario"}
+        description={"Descripcion para cuando compartes"}
+        onAccept={() => {
+          setOpenShareDialog(false);
+        }}
+        state={state}
+        isShare={true}
+      >
+        <ShareForm />
       </Modal>
     </div>
   ) : (

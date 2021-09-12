@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -6,20 +5,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import {
-  IconButton,
-  Button,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Paper,
-} from "@material-ui/core";
+import { IconButton, Button } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -89,11 +76,15 @@ function Modal(props) {
       <DialogTitle id="alert-dialog-title">
         <div className={classes.formTitle}>
           {props.title}
-          <div className={classes.containerEditTitlett}>
-            <IconButton color="primary">
-              <EditIcon color="primary" />
-            </IconButton>
-          </div>
+          {!props.isShare ? (
+            <div className={classes.containerEditTitlett}>
+              <IconButton color="primary">
+                <EditIcon color="primary" />
+              </IconButton>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <div className={classes.formDescription}>{props.description}</div>
       </DialogTitle>
