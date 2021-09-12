@@ -7,7 +7,6 @@ import AddIcon from "@material-ui/icons/Add";
 import Header from "../../components/Header";
 import ListForms from "../../components/ListForms";
 import CreationForm from "../../components/CreationForm";
-import AnswerForm from "../../components/AnswerForm";
 import TabNavigation from "../../components/TabNavigation";
 import Modal from "../../components/Modal";
 
@@ -61,6 +60,12 @@ function Main({ history }) {
           onClick={() => {
             setOpenDialog(true);
             onChangePage({ id: 0, name: "active" });
+            onSelectedForm({
+              id: state.forms.length + 1,
+              name: "Formulario",
+              questions: [],
+              description: "",
+            });
           }}
         />
       </Fab>
@@ -69,29 +74,30 @@ function Main({ history }) {
 
       <Modal
         openDialog={openDialog}
-        onClose={() => closeDialog()}
-        title={"Titulo por props"}
-        description={"descrption"}
-        onAccept={(form) =>
-          !state.selectedForm ? console.log(form) : alert("Respondido")
+        onClose={() => {
+          setOpenDialog(false);
+          onSelectedForm(undefined);
+          onSelectedQuestion(undefined);
+        }}
+        title={
+          state.selectedForm ? "Edita tu formulario" : "Crea tu formulario"
         }
+        description={state.selectedForm ? "Estas editando" : "estar creando"}
+        onAccept={(form) => {
+          setOpenDialog(false);
+          state.forms.find((form) => form.id === state.selectedForm.id)
+            ? onUpdateForm(form)
+            : onCreateForm(form);
+        }}
         state={state}
       >
-        {state.selectedForm ? (
-          <AnswerForm
-            form={state.selectedForm}
-            onSelectedQuestion={onSelectedQuestion}
-            state={state}
-          />
-        ) : (
-          <CreationForm
-            state={state}
-            onAddedQuestion={onAddedQuestion}
-            onSelectedQuestion={onSelectedQuestion}
-            onDeleteQuestion={onDeleteQuestion}
-            onUpdateQuestion={onUpdateQuestion}
-          />
-        )}
+        <CreationForm
+          state={state}
+          onAddedQuestion={onAddedQuestion}
+          onSelectedQuestion={onSelectedQuestion}
+          onDeleteQuestion={onDeleteQuestion}
+          onUpdateQuestion={onUpdateQuestion}
+        />
       </Modal>
     </div>
   ) : (
@@ -135,18 +141,12 @@ function Main({ history }) {
     return service.onChangePage({ state, page }).then(setState);
   }
 
-  function onClearQuestions() {
-    return service.onClearQuestions({ state }).then(setState);
+  function onCreateForm(form) {
+    return service.onCreateForm({ state, form }).then(setState);
   }
 
-  function closeDialog() {
-    setOpenDialog(false);
-    onSelectedQuestion(undefined);
-    if (state.selectedForm) {
-      onSelectedForm(undefined);
-    } else {
-      onClearQuestions();
-    }
+  function onUpdateForm(form) {
+    return service.onUpdateForm({ state, form }).then(setState);
   }
 }
 

@@ -104,17 +104,26 @@ function Modal(props) {
         {props.children}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => props.onClose()} color="primary">
+        <Button
+          variant="outlined"
+          onClick={() => props.onClose()}
+          color="primary"
+          size="small"
+        >
           Disagree
         </Button>
         <Button
+          size="small"
+          variant="outlined"
           onClick={() =>
             props.onAccept({
-              form: {
-                name: "Formulario sin titulo",
-                description: "Descripcion del formulario",
-                questions: props.state.questions,
-              },
+              id: props.state.selectedForm.id,
+              name: props.state.selectedForm.name,
+              description: props.state.selectedForm.description,
+              questions: props.state.selectedForm.questions,
+              image: props.state.selectedForm.image
+                ? props.state.selectedForm.image
+                : undefined,
             })
           }
           color="primary"

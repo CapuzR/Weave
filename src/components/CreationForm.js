@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   IconButton,
@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     width: "500px",
     height: "500px",
@@ -68,13 +68,17 @@ const useStyles = makeStyles((theme) => ({
 
 function CreationForm(props) {
   const classes = useStyles();
-  const [questionValue] = useState();
   const [type, setType] = useState("short answer");
+
+  useEffect(() => {
+    if (props.state.selectedForm?.questions.length > 0)
+      props.onSelectedQuestion(props.state.selectedForm?.questions[0]);
+  }, [props.state.selectedForm]);
 
   return (
     <>
-      {props.state.questions.length > 0 ? (
-        props.state.questions.map((question) => (
+      {props.state.selectedForm?.questions.length > 0 ? (
+        props.state.selectedForm?.questions.map((question) => (
           <Paper
             key={question.id}
             elevation={props.state.selectedQuestion?.id === question.id ? 5 : 1}
@@ -94,7 +98,7 @@ function CreationForm(props) {
                     id="filled-basic"
                     label="Pregunta"
                     variant="filled"
-                    value={questionValue}
+                    // value={props.state.selectedQuestion?.name}
                     onChange={(event) =>
                       props.onUpdateQuestion({
                         question: event.target.value,
@@ -160,8 +164,8 @@ function CreationForm(props) {
           color="primary"
           onClick={() => {
             props.onAddedQuestion({
-              id: props.state.questions.length,
-              question: "",
+              id: props.state.selectedForm?.questions.length + 1,
+              name: "",
               type: "",
             });
 

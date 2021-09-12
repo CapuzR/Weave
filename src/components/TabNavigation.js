@@ -24,6 +24,10 @@ function TabNavigation(props) {
       id: 1,
       name: "inactive",
     },
+    {
+      id: 2,
+      name: "shared",
+    },
   ];
 
   return (
@@ -39,7 +43,7 @@ function TabNavigation(props) {
           aria-label="disabled tabs example"
         >
           {items.map((item) => (
-            <Tab label={item.name} />
+            <Tab label={item.name} key={item.id} />
           ))}
         </Tabs>
       </Paper>
