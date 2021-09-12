@@ -132,6 +132,7 @@ function ShareForm(props) {
             <></>
           )}
         </div>
+        <div className={classes.containerType}></div>
       </Grid>
     </Grid>
   );

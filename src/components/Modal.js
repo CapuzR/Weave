@@ -1,12 +1,18 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { IconButton, Button } from "@material-ui/core";
+import FormGroup from "@material-ui/core/FormGroup";
+import Switch from "@material-ui/core/Switch";
+import { IconButton, Button, Typography, Grid } from "@material-ui/core";
+
 import EditIcon from "@material-ui/icons/Edit";
+import PublicIcon from "@material-ui/icons/Public";
+import LockIcon from "@material-ui/icons/Lock";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -59,11 +65,38 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
   },
+  switchContainer: {
+    marginRight: "auto",
+    marginLeft: "20px",
+  },
+  switchItem: {
+    display: "flex",
+    alignItems: "center",
+    fontSize: "12px",
+    fontWeight: "600",
+  },
+  switch: {
+    color: "red",
+  },
 }));
+
+const CustomSwitch = withStyles({
+  switchBase: {
+    color: "#3F51B5",
+    "&$checked": {
+      color: "#3F51B5",
+    },
+    "&$checked + $track": {
+      backgroundColor: "#000000",
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
 
 function Modal(props) {
   const classes = useStyles();
-
+  console.log(props);
   return (
     <Dialog
       open={props.openDialog}
@@ -95,6 +128,33 @@ function Modal(props) {
         {props.children}
       </DialogContent>
       <DialogActions>
+        {props.isShare ? (
+          <FormGroup className={classes.switchContainer}>
+            <Typography component="div">
+              <Grid component="label" container alignItems="center" spacing={1}>
+                <Grid item className={classes.switchItem}>
+                  {`Public `}{" "}
+                  <PublicIcon fontSize="small" style={{ color: "#7e7e7e" }} />
+                </Grid>
+                <Grid item>
+                  <CustomSwitch />
+                  {/* <AntSwitch
+                  checked={state.checkedC}
+                  onChange={handleChange}
+                  name="checkedC"
+                /> */}
+                </Grid>
+                <Grid item className={classes.switchItem}>
+                  {`Private `}{" "}
+                  <LockIcon fontSize="small" style={{ color: "#7e7e7e" }} />
+                </Grid>
+              </Grid>
+            </Typography>
+          </FormGroup>
+        ) : (
+          <></>
+        )}
+
         <Button
           variant="outlined"
           onClick={() => props.onClose()}
