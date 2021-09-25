@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,7 +83,7 @@ function ListForms(props) {
             }}
             // onClick={() => props.onDelete(item.id)}
           >
-            <EditIcon color="primary" />
+            <VisibilityIcon color="primary" />
           </IconButton>
         </CardActions>
       </Card>

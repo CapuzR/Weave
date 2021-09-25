@@ -96,7 +96,6 @@ const CustomSwitch = withStyles({
 
 function Modal(props) {
   const classes = useStyles();
-  console.log(props);
   return (
     <Dialog
       open={props.openDialog}
@@ -109,7 +108,10 @@ function Modal(props) {
       <DialogTitle id="alert-dialog-title">
         <div className={classes.formTitle}>
           {props.title}
-          {!props.isShare ? (
+          {!props.isShare &&
+          !props.state.forms.find(
+            (form) => form.id === props.state.selectedForm?.id
+          ) ? (
             <div className={classes.containerEditTitlett}>
               <IconButton color="primary">
                 <EditIcon color="primary" />

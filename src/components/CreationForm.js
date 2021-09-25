@@ -139,17 +139,25 @@ function CreationForm(props) {
                   </FormControl>
                 </div>
               </div>
-              {props.state.selectedQuestion?.id === question.id ? (
-                <div className={classes.containerActions}>
-                  <IconButton disabled className={classes.duplicateIcon}>
-                    <FileCopyIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => props.onDeleteQuestion(question.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </div>
+
+              {!props.isShare &&
+              !props.state.forms.find(
+                (form) => form.id === props.state.selectedForm?.id
+              ) ? (
+                props.state.selectedQuestion?.id === question.id ? (
+                  <div className={classes.containerActions}>
+                    <IconButton disabled className={classes.duplicateIcon}>
+                      <FileCopyIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => props.onDeleteQuestion(question.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                ) : (
+                  <></>
+                )
               ) : (
                 <></>
               )}
@@ -159,24 +167,34 @@ function CreationForm(props) {
       ) : (
         <div>No hay preguntas</div>
       )}
-      <div className={classes.addQuestionContainer}>
-        <IconButton
-          color="primary"
-          onClick={() => {
-            props.onAddedQuestion({
-              id: props.state.selectedForm?.questions.length + 1,
-              name: "",
-              type: "",
-            });
+      {!props.isShare &&
+      !props.state.forms.find(
+        (form) => form.id === props.state.selectedForm?.id
+      ) ? (
+        <div className={classes.addQuestionContainer}>
+          <IconButton
+            color="primary"
+            onClick={() => {
+              props.onAddedQuestion({
+                id: props.state.selectedForm?.questions.length + 1,
+                name: "",
+                type: "",
+              });
 
-            document
-              .getElementById("creation-forms-container")
-              .scrollTo(0, document.getElementById("creation-forms-container"));
-          }}
-        >
-          <AddCircleIcon color="primary" />
-        </IconButton>
-      </div>
+              document
+                .getElementById("creation-forms-container")
+                .scrollTo(
+                  0,
+                  document.getElementById("creation-forms-container")
+                );
+            }}
+          >
+            <AddCircleIcon color="primary" />
+          </IconButton>
+        </div>
+      ) : (
+        <></>
+      )}
     </>
   );
 }
