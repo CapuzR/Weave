@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../internet-identity"
+		},
+		{
+			"path": "../../../../../../../.cache/dfinity/versions/0.8.1/base"
+		},
+		{
+			"path": "../../../a3capasUniverso"
+		},
+		{
+			"path": "../../../weave"
+		},
+		{
+			"path": "../../../weaveProfile"
+		},
+		{
+			"path": "../../../../../../Prixerapp/frontend/src"
+		},
+		{
+			"path": "../../../chainedAirdrop"
+		},
+		{
+			"path": "../../../weaveProfileFe"
+		}
+	],
+	"settings": {}
+}

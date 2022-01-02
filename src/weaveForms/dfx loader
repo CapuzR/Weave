@@ -1,0 +1,38 @@
+
+//--------------------------------------------------------------------------------------------------Form Templates
+
+// Create
+// dfx --identity default canister call weaveForms createFT '( record { formBase = record { createdOn = 1634382778000; title = "Second FT test"; description = "Second test"; }; fType = variant { priv };  sharedWith = (vec { record { ppal = principal "m5spm-rypb4-5dh4x-cfmly-f2ngh-qjvm4-wyntp-kbhfk-5mhn7-ag65r-qae"; sType = variant{ owner } } }); questions = (vec { record { id = 1; question = "Is this a question?"; createdOn = 16534878; qType = variant { text }  } })})'
+
+//Read
+// dfx canister call weaveForms readOwnedFT
+
+//Update
+//dfx --identity default canister call weaveForms updateFT '( record { id=3; formBase = record { createdOn = 1634382778000; title = "Second FT test"; description = "Second test"; }; "principal" = principal "m5spm-rypb4-5dh4x-cfmly-f2ngh-qjvm4-wyntp-kbhfk-5mhn7-ag65r-qae"; fType = variant { priv };  sharedWith = (vec { record { ppal = principal "m5spm-rypb4-5dh4x-cfmly-f2ngh-qjvm4-wyntp-kbhfk-5mhn7-ag65r-qae"; sType = variant{ owner } } }); questions = (vec { record { id = 1; question = "Is this a question?"; qType = variant { text }  }; record { id = 2; question = "Is this a question 2?"; qType = variant { text }; } })})'
+
+//Delete
+//dfx canister call weaveForms deleteFT '(4)'
+
+//--------------------------------------------------------------------------------------------------Filled Forms
+
+//Create (Creates question from template automatically)
+//dfx canister call weaveForms createFF '(record { fTId = 13; })' 
+
+//Read
+//dfx canister call weaveForms readMyFF
+
+//--------------------------------------------------------------------------------------------------Filled Questions
+
+//Create
+// Not necessary
+
+//Read
+//dfx canister call weaveForms readMyFQbyFormId '(2)'
+
+//--------------------------------------------------------------------------------------------------Form Templates
+
+// Create
+// dfx --identity default canister call weaveForms createAnswers '( vec { record { fQId = 0; answer = "First f** answer" } } )'
+
+//Read
+// dfx canister call weaveForms readMyAbyQId '(3)'

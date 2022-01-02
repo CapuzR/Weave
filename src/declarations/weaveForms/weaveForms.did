@@ -1,0 +1,186 @@
+type SharedType = 
+ record {
+   ppal: text;
+   sType: SType;
+ };
+type SType = 
+ variant {
+   editor;
+   owner;
+   reader;
+ };
+type Result_5 = 
+ variant {
+   err: Error;
+   ok: vec Answer__1;
+ };
+type Result_4 = 
+ variant {
+   err: Error;
+   ok: vec FF;
+ };
+type Result_3 = 
+ variant {
+   err: Error;
+   ok: vec FFF;
+ };
+type Result_2 = 
+ variant {
+   err: Error;
+   ok: vec FilledQuestion;
+ };
+type Result_1 = 
+ variant {
+   err: Error;
+   ok: vec FT;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok;
+ };
+type QType = 
+ variant {
+   checkboxes;
+   date;
+   dropdown;
+   multipleChoice;
+   paragraph;
+   "principal";
+   shortAnswer;
+   "text";
+   time;
+ };
+type QT = 
+ record {
+   id: nat;
+   qType: QType;
+   question: text;
+ };
+type NewFF = record {fTId: nat;};
+type NewAnswer = 
+ record {
+   answer: text;
+   fQId: nat;
+ };
+type FormBaseUpdate = 
+ record {
+   description: text;
+   title: text;
+ };
+type FormBase = 
+ record {
+   createdOn: int;
+   description: text;
+   title: text;
+ };
+type FilledQuestion = 
+ record {
+   createdOn: int;
+   fFId: vec nat;
+   id: nat;
+   "principal": principal;
+   qType: QType;
+   question: text;
+ };
+type FType = 
+ variant {
+   priv;
+   pub;
+ };
+type FTUpdate = 
+ record {
+   fType: FType;
+   formBase: FormBaseUpdate;
+   id: nat;
+   nFTCol: text;
+   questions: vec QT;
+   sharedWith: vec SharedType;
+ };
+type FTInit = 
+ record {
+   fType: FType;
+   formBase: FormBaseUpdate;
+   nFTCol: text;
+   questions: vec QT;
+   sharedWith: vec SharedType;
+ };
+type FT = 
+ record {
+   fType: FType;
+   formBase: FormBase;
+   id: nat;
+   nFTCol: text;
+   "principal": principal;
+   questions: vec QT;
+   sharedWith: vec SharedType;
+ };
+type FFilledQuestion = 
+ record {
+   answers: vec Answer;
+   createdOn: int;
+   fFId: vec nat;
+   id: nat;
+   "principal": principal;
+   qType: QType;
+   question: text;
+ };
+type FFF = 
+ record {
+   createdOn: int;
+   fTId: nat;
+   formBase: FormBase;
+   id: nat;
+   "principal": principal;
+   questions: vec FFilledQuestion;
+ };
+type FF = 
+ record {
+   createdOn: int;
+   fTId: nat;
+   formBase: FormBase;
+   id: nat;
+   "principal": principal;
+ };
+type Error = 
+ variant {
+   AlreadyExists;
+   NotAuthorized;
+   NotFound;
+   Other: text;
+ };
+type Answer__1 = 
+ record {
+   answer: text;
+   createdOn: int;
+   fQId: nat;
+   id: nat;
+   lastUpdate: int;
+   "principal": principal;
+   qType: QType;
+ };
+type Answer = 
+ record {
+   answer: text;
+   createdOn: int;
+   fQId: nat;
+   id: nat;
+   lastUpdate: int;
+   "principal": principal;
+   qType: QType;
+ };
+service : {
+  createAnswers: (vec NewAnswer) -> (Result);
+  createFF: (NewFF, vec NewAnswer) -> (Result);
+  createFT: (FTInit) -> (Result);
+  deleteFT: (nat) -> (Result);
+  getNextFTId: () -> (nat) query;
+  readAnswersByFormId: (nat) -> (Result_3);
+  readFTById: (nat) -> (Result_1);
+  readMyAbyQId: (nat) -> (Result_5);
+  readMyFF: () -> (Result_4);
+  readMyFFF: () -> (Result_3);
+  readMyFQbyFormId: (nat) -> (Result_2);
+  readOwnedFT: () -> (Result_1);
+  updateFT: (FTUpdate) -> (Result);
+}
