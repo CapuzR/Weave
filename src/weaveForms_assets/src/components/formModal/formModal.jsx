@@ -81,7 +81,6 @@ function FormModal(props) {
   async function onUpdateForm(form) {
     props.setLoading(true);
     const result = await service.onUpdateForm({ state: props.state, form });
-
     if(result) {
       location.reload();
     } else {

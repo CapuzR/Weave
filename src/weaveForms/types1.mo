@@ -37,7 +37,7 @@ module {
     fType: FType;
     sharedWith: [SharedType];
     questions: [QT];
-    nFTCol: Text;
+    nFTCol: NFTCol;
   };
 
   public type QT = {
@@ -52,7 +52,13 @@ module {
     fType: FType;
     sharedWith: [SharedType];
     questions: [QT];
-    nFTCol: Text;
+    nFTCol: NFTCol;
+  };
+
+  public type NFTCol = {
+    canisterId: Text;
+    standard: Text;
+    name: Text;
   };
   
   public type FTUpdate = {
@@ -61,7 +67,7 @@ module {
     fType: FType;
     sharedWith: [SharedType];
     questions: [QT];
-    nFTCol: Text;
+    nFTCol: NFTCol;
   };
   
 //Filled Forms

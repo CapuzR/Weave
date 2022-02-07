@@ -61,12 +61,13 @@ function Form(props) {
           <Button
             size="small"
             variant="contained"
-            onClick={async () =>{
+            onClick={
+              async () =>{
                 await submitAnswers();
-            }
+              }
             }
             color="primary"
-            >
+          >
             Submit
           </Button>
         }
@@ -86,13 +87,19 @@ function Form(props) {
 
   async function getFormData () {
       props.setLoading(true);
-      const formData = await service.getFormData(formId);
-      if(formData){
-        setState(formData);
-        props.setLoading(false);
-      } else {
-        navigate('/forms');
-      }
+      // const isAccessible = await service.isAccessible(formId);
+      // if(isAccessible) {
+        const formData = await service.getFormData(formId);
+        if(formData){
+          setState(formData);
+          props.setLoading(false);
+        } else {
+          navigate('/forms');
+        }
+      // } else {
+      //   alert('You have to own a special NFT to fill to this form.');
+      //   navigate('/forms');
+      // }
   };
 
 };

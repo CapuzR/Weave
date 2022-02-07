@@ -3,7 +3,6 @@ import { createActor, canisterId } from "../../../../declarations/weaveForms/ind
 import login from "../Login/service";
 import utils from "../../utils/utils";
 import { Navigate } from "react-router-dom";
-
 BigInt.prototype.toJSON = function() { return this.toString()  };
 
 const state = {
@@ -28,88 +27,44 @@ export default {
   getNextFTId
 };
 
-async function newActor(identity){
-  return await createActor(canisterId, {
-    agentOptions: {
-      identity: identity
-    }
-  })
-};
-
 async function init(formType, state) {
-
   let forms;
   let newState = {};
-  
-  if(localStorage.getItem("ownedForms") && formType == "owned"){
-    forms = await utils.idsToNat(JSON.parse(localStorage.getItem("ownedForms")));
-    newState = {
-      forms: forms,
-      page: { id: 0, title: "owned" }
-    };
-  } else if(localStorage.getItem("answeredForms") && formType == "answered") {
-    forms = await utils.idsToNat(JSON.parse(localStorage.getItem("answeredForms")));
-    newState = {
-      forms: forms,
-      page: { id: 1, title: "answered" }
-    };
+  let id = 0;
+  const type = formType+"Forms";
+  if(localStorage.getItem(type)){
+    forms = await utils.idsToNat(JSON.parse(localStorage.getItem(type)));
   } else {
-  // const authClient = await AuthClient.create();
-  // const identity = await authClient.getIdentity();
-  let identity;
-  let actor;
-  if(localStorage.getItem("wallet") == 'Stoic') {
-    identity = login.onSignInStoic();
-    actor = await newActor(identity);
-  } else if (localStorage.getItem('wallet') == 'Plug') {
-    await login.verifyConnectionAndAgent();
-    actor = await login.newActorPlug();
-  }
-  
-  if(formType == "owned") {
-    forms = await actor.readOwnedFT();
-    if (Object.keys(forms) != 'err') {
-      localStorage.setItem("ownedForms", JSON.stringify(forms.ok));
-      forms = forms.ok;
-    } else {
-      localStorage.setItem("ownedForms", "[]");
-      alert("Create your first 100% on-chain form now.");
-      forms = [];
-    }
-    newState = {
-      forms: forms,
-      page: { id: 0, title: "owned" }
-    };
-  } else if (formType == "answered") {
-    forms = await actor.readMyFFF();
-    if (Object.keys(forms) != 'err') {
-      localStorage.setItem("answeredForms", JSON.stringify(forms.ok));
-      forms = forms.ok;
-      newState = {
-        forms: forms,
-        page: { id: 1, title: "answered" }
-      };
-    } else {
-      alert("You haven't answered any form yet.");
-      location.reload();
+    let actor = await login.newActor();
+    if(formType == "owned") {
+      id = 0;
+      forms = await actor.readOwnedFT();
+      if (Object.keys(forms) != 'err') {
+        localStorage.setItem("ownedForms", JSON.stringify(forms.ok));
+        forms = forms.ok;
+      }
+    } else if (formType == "answered") {
+      id = 1;
+      forms = await actor.readMyFFF();
+      if (Object.keys(forms) != 'err') {
+        localStorage.setItem("answeredForms", JSON.stringify(forms.ok));
+        forms = forms.ok;
+      } else {
+        alert("You haven't answered any form yet.");
+        location.reload();
+      }
     }
   }
-}
-    return Object.assign({}, state, newState);
+  newState = {
+    forms: forms,
+    page: { id: id, title: formType }
+  };
+  return Object.assign({}, state, newState);
 }
 
 async function getFormAnswers(id, state) {
 
-  let identity;
-  let actor;
-  let newState = {};
-  if(localStorage.getItem("wallet") == 'Stoic') {
-    identity = login.onSignInStoic();
-    actor = await newActor(identity);
-  } else if (localStorage.getItem('wallet') == 'Plug') {
-    await login.verifyConnectionAndAgent();
-    actor = await login.newActorPlug();
-  }
+  let actor = await login.newActor();
   
   let forms = await actor.readAnswersByFormId(id);
   if (Object.keys(forms) != 'err') {
@@ -119,24 +74,14 @@ async function getFormAnswers(id, state) {
       page: { id: 0, title: "owned" }
     };
   } else {
-    alert("You haven't answered any form yet.");
+    alert("Your Form hasn't been answered yet.");
     location.reload();
   }
   return Object.assign({}, state, newState);
 }
 
 async function getNextFTId() {
-
-  let identity;
-  let actor;
-  if(localStorage.getItem("wallet") == 'Stoic') {
-    identity = login.onSignInStoic();
-    actor = await newActor(identity);
-  }  else if (localStorage.getItem('wallet') == 'Plug') {
-    await login.verifyConnectionAndAgent();
-    actor = await login.newActorPlug();
-  }
-  
+  let actor = await login.newActor();
   return await actor.getNextFTId();
 }
 
@@ -157,15 +102,7 @@ function onSelectedForm(input) {
 }
 
 async function onDeleteForm(id, state) {
-  let actor = "";
-  
-  if(localStorage.getItem('wallet') == 'Stoic') {
-    actor = await login.newActorStoic(await login.onSignInStoic());
-  } else if (localStorage.getItem('wallet') == 'Plug') {
-    await login.verifyConnectionAndAgent();
-    actor = await login.newActorPlug();
-  }
-
+  let actor = await login.newActor();
   let result = await actor.deleteFT(id);
 
   const index = state.forms.findIndex(
@@ -184,8 +121,6 @@ async function onDeleteForm(id, state) {
   } else {
     return false;
   }
-  // input.state.forms = input.state.forms.filter((item) => item.id !== input.id);
-  // return Promise.resolve(Object.assign({}, input.state));
 }
 
 function onChangePage(input) {

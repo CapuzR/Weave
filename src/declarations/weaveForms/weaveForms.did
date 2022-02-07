@@ -9,6 +9,11 @@ type SType =
    owner;
    reader;
  };
+type Result_6 = 
+ variant {
+   err: Error;
+   ok: NFTCol__1;
+ };
 type Result_5 = 
  variant {
    err: Error;
@@ -63,6 +68,18 @@ type NewAnswer =
    answer: text;
    fQId: nat;
  };
+type NFTCol__1 = 
+ record {
+   canisterId: text;
+   name: text;
+   standard: text;
+ };
+type NFTCol = 
+ record {
+   canisterId: text;
+   name: text;
+   standard: text;
+ };
 type FormBaseUpdate = 
  record {
    description: text;
@@ -93,7 +110,7 @@ type FTUpdate =
    fType: FType;
    formBase: FormBaseUpdate;
    id: nat;
-   nFTCol: text;
+   nFTCol: NFTCol;
    questions: vec QT;
    sharedWith: vec SharedType;
  };
@@ -101,7 +118,7 @@ type FTInit =
  record {
    fType: FType;
    formBase: FormBaseUpdate;
-   nFTCol: text;
+   nFTCol: NFTCol;
    questions: vec QT;
    sharedWith: vec SharedType;
  };
@@ -110,7 +127,7 @@ type FT =
    fType: FType;
    formBase: FormBase;
    id: nat;
-   nFTCol: text;
+   nFTCol: NFTCol;
    "principal": principal;
    questions: vec QT;
    sharedWith: vec SharedType;
@@ -175,6 +192,7 @@ service : {
   createFT: (FTInit) -> (Result);
   deleteFT: (nat) -> (Result);
   getNextFTId: () -> (nat) query;
+  nFTGatedWith: (nat) -> (Result_6) query;
   readAnswersByFormId: (nat) -> (Result_3);
   readFTById: (nat) -> (Result_1);
   readMyAbyQId: (nat) -> (Result_5);

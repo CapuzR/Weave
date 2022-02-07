@@ -61,6 +61,7 @@ actor WeaveForms {
     type Profile = Types.Profile;
     type FormBase = Types.FormBase;
     type Error = Types.Error;
+    type NFTCol = Types.NFTCol;
 
   //------------------------------------------------------------------------------------Form Templates
 
@@ -129,6 +130,7 @@ actor WeaveForms {
         if(Principal.toText(callerId) == "2vxsx-fae") {
             return #err(#NotAuthorized);
         };
+        D.print(debug_show(callerId));
 
         let ownedForms : Trie.Trie<Nat, FT> = Trie.filter<Nat, FT>(formTemplates, func (k, v) { Principal.equal(v.principal, callerId) });
         let result : [FT] = Trie.toArray<Nat, FT, FT>(ownedForms, func (k, v) { v });
@@ -137,6 +139,20 @@ actor WeaveForms {
             #ok(result);
         } else {
             #err(#NotFound);
+        };
+    };
+
+    public query func nFTGatedWith (id : Nat) : async Result.Result<NFTCol, Error> {
+        let form = Trie.get<Nat, FT>(formTemplates, natKey(id), Nat.equal);
+        // let result : [FT] = Trie.toArray<Nat, FT, FT>(form, func (k, v) { v });
+        D.print(debug_show(form));
+        switch(form) {
+            case (null) {
+                #err(#NotFound);
+            };
+            case (?f) {
+                #ok(f.nFTCol);
+            };
         };
     };
 

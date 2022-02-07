@@ -18,6 +18,11 @@ export const idlFactory = ({ IDL }) => {
     'reader' : IDL.Null,
   });
   const SharedType = IDL.Record({ 'ppal' : IDL.Text, 'sType' : SType });
+  const NFTCol = IDL.Record({
+    'name' : IDL.Text,
+    'standard' : IDL.Text,
+    'canisterId' : IDL.Text,
+  });
   const QType = IDL.Variant({
     'principal' : IDL.Null,
     'checkboxes' : IDL.Null,
@@ -38,10 +43,16 @@ export const idlFactory = ({ IDL }) => {
   const FTInit = IDL.Record({
     'formBase' : FormBaseUpdate,
     'sharedWith' : IDL.Vec(SharedType),
-    'nFTCol' : IDL.Text,
+    'nFTCol' : NFTCol,
     'questions' : IDL.Vec(QT),
     'fType' : FType,
   });
+  const NFTCol__1 = IDL.Record({
+    'name' : IDL.Text,
+    'standard' : IDL.Text,
+    'canisterId' : IDL.Text,
+  });
+  const Result_6 = IDL.Variant({ 'ok' : NFTCol__1, 'err' : Error });
   const FormBase = IDL.Record({
     'title' : IDL.Text,
     'createdOn' : IDL.Int,
@@ -79,7 +90,7 @@ export const idlFactory = ({ IDL }) => {
     'principal' : IDL.Principal,
     'formBase' : FormBase,
     'sharedWith' : IDL.Vec(SharedType),
-    'nFTCol' : IDL.Text,
+    'nFTCol' : NFTCol,
     'questions' : IDL.Vec(QT),
     'fType' : FType,
   });
@@ -118,7 +129,7 @@ export const idlFactory = ({ IDL }) => {
     'id' : IDL.Nat,
     'formBase' : FormBaseUpdate,
     'sharedWith' : IDL.Vec(SharedType),
-    'nFTCol' : IDL.Text,
+    'nFTCol' : NFTCol,
     'questions' : IDL.Vec(QT),
     'fType' : FType,
   });
@@ -128,6 +139,7 @@ export const idlFactory = ({ IDL }) => {
     'createFT' : IDL.Func([FTInit], [Result], []),
     'deleteFT' : IDL.Func([IDL.Nat], [Result], []),
     'getNextFTId' : IDL.Func([], [IDL.Nat], ['query']),
+    'nFTGatedWith' : IDL.Func([IDL.Nat], [Result_6], ['query']),
     'readAnswersByFormId' : IDL.Func([IDL.Nat], [Result_3], []),
     'readFTById' : IDL.Func([IDL.Nat], [Result_1], []),
     'readMyAbyQId' : IDL.Func([IDL.Nat], [Result_5], []),

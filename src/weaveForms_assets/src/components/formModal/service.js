@@ -12,7 +12,6 @@ export default {
   };
 
 async function onCreateForm(input) {    
-  console.log(input.form);
     let actor = await login.newActor();
     let result = await actor.createFT(input.form);
     

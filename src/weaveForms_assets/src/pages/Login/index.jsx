@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import { Principal } from '@dfinity/principal';
 
 import services from './service.js';
 import service from '../../router/service.js';
@@ -95,8 +96,10 @@ export default function Login(props) {
     props.setLoading(true);
     const identity = await services.onSignInPlug();
     if(identity){
-      localStorage.setItem("_scApp", JSON.stringify(identity));
+      const principal = await window.ic.plug.getPrincipal()
+      localStorage.setItem("_scApp", JSON.stringify({principal: principal.toText()}));
       localStorage.setItem("wallet", 'Plug');
+      await window.ic.plug.agent.fetchRootKey();
       props.setIdentity(identity);
       props.setLoading(false);
       navigate('/forms');

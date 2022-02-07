@@ -50,14 +50,14 @@ export interface FT {
   'principal' : Principal,
   'formBase' : FormBase,
   'sharedWith' : Array<SharedType>,
-  'nFTCol' : string,
+  'nFTCol' : NFTCol,
   'questions' : Array<QT>,
   'fType' : FType,
 }
 export interface FTInit {
   'formBase' : FormBaseUpdate,
   'sharedWith' : Array<SharedType>,
-  'nFTCol' : string,
+  'nFTCol' : NFTCol,
   'questions' : Array<QT>,
   'fType' : FType,
 }
@@ -65,7 +65,7 @@ export interface FTUpdate {
   'id' : bigint,
   'formBase' : FormBaseUpdate,
   'sharedWith' : Array<SharedType>,
-  'nFTCol' : string,
+  'nFTCol' : NFTCol,
   'questions' : Array<QT>,
   'fType' : FType,
 }
@@ -85,6 +85,16 @@ export interface FormBase {
   'description' : string,
 }
 export interface FormBaseUpdate { 'title' : string, 'description' : string }
+export interface NFTCol {
+  'name' : string,
+  'standard' : string,
+  'canisterId' : string,
+}
+export interface NFTCol__1 {
+  'name' : string,
+  'standard' : string,
+  'canisterId' : string,
+}
 export interface NewAnswer { 'fQId' : bigint, 'answer' : string }
 export interface NewFF { 'fTId' : bigint }
 export interface QT { 'id' : bigint, 'question' : string, 'qType' : QType }
@@ -109,6 +119,8 @@ export type Result_4 = { 'ok' : Array<FF> } |
   { 'err' : Error };
 export type Result_5 = { 'ok' : Array<Answer__1> } |
   { 'err' : Error };
+export type Result_6 = { 'ok' : NFTCol__1 } |
+  { 'err' : Error };
 export type SType = { 'owner' : null } |
   { 'editor' : null } |
   { 'reader' : null };
@@ -119,6 +131,7 @@ export interface _SERVICE {
   'createFT' : (arg_0: FTInit) => Promise<Result>,
   'deleteFT' : (arg_0: bigint) => Promise<Result>,
   'getNextFTId' : () => Promise<bigint>,
+  'nFTGatedWith' : (arg_0: bigint) => Promise<Result_6>,
   'readAnswersByFormId' : (arg_0: bigint) => Promise<Result_3>,
   'readFTById' : (arg_0: bigint) => Promise<Result_1>,
   'readMyAbyQId' : (arg_0: bigint) => Promise<Result_5>,

@@ -5,6 +5,11 @@ import { Principal } from '@dfinity/principal';
 import { getAllNFTS } from '@psychedelic/dab-js';
 import { HttpAgent } from "@dfinity/agent";
 
+const network =
+  process.env.DFX_NETWORK ||
+  (process.env.NODE_ENV === "production" ? "ic" : "local");
+const host = network != "ic" ? "http://localhost:8080" : "https://mainnet.dfinity.network";
+
 export default {
     getNFTList
   };
@@ -16,12 +21,11 @@ export default {
     } else if (localStorage.getItem('wallet') == 'Plug') {
       principal = await window.ic.plug.getPrincipal();
     }
-    const agent = new HttpAgent({ host: 'https://ic0.app' });
+    const agent = new HttpAgent({ host: host });
     const collections = await getAllNFTS(
       agent,
       Principal.from(principal)
     );
-    console.log(collections);
     return collections;
   };
   

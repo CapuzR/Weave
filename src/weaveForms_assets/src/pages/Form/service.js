@@ -1,5 +1,17 @@
 
 import login from "../Login/service";
+BigInt.prototype.toJSON = function() { return this.toString()  };
+import { Principal } from '@dfinity/principal';
+import { getAllUserNFTs } from '@psychedelic/dab-js';
+import { getNFTActor } from '@psychedelic/dab-js';
+import { HttpAgent } from "@dfinity/agent";
+import { canisterId } from "../../../../declarations/weaveForms/index";
+const whitelist = [ canisterId, 'vttjj-zyaaa-aaaal-aabba-cai', 'aipdg-waaaa-aaaah-aaq5q-cai' ];
+
+const network =
+  process.env.DFX_NETWORK ||
+  (process.env.NODE_ENV === "production" ? "ic" : "local");
+const host = network != "ic" ? "http://localhost:8080" : "https://mainnet.dfinity.network";
 
 const state = {
   form: [],
@@ -12,20 +24,32 @@ const state = {
 export default {
     getFormData,
     submitAnswers,
-    state
+    isAccessible,
+    state,
 }
 
-async function getFormData(formId) {
-  let identity;
-  let actor;
-  if(localStorage.getItem("wallet") == 'Stoic') {
-    identity = login.onSignInStoic();
-    actor = await login.newActorStoic(identity);
-  } else if (localStorage.getItem('wallet') == 'Plug') {
-    await verifyConnectionAndAgent();
-    actor = login.newActorPlug(await login.onSignInPlug());
-  }
+const getUserNFTs = async (nFTCol, principal, agent) => {
+  const NFTActor = await getNFTActor({ canisterId: nFTCol.canisterId, agent: agent, standard: nFTCol.standard });
+  await NFTActor.getUserTokens(Principal.fromText(principal));
+}
 
+async function isAccessible(formId) {
+
+  let actor = await login.newActor();
+  let principal = JSON.parse(localStorage.getItem('_scApp')).principal;
+
+  //Recibe el canisterID de la colección
+  const lockedFormBy = await actor.nFTGatedWith(parseInt(formId));
+
+  //consultar en DAB
+
+    const agent = new HttpAgent({ host: host });
+    await getUserNFTs(lockedFormBy.ok, principal, agent);
+
+};
+
+async function getFormData(formId) {
+  let actor = await login.newActor();
   const form = await actor.readFTById(parseInt(formId));
   
   if (Object.keys(form) != 'err') {
@@ -42,16 +66,7 @@ async function getFormData(formId) {
 };
 
 async function submitAnswers(form) {
-    let identity;
-    let actor;
-    if(localStorage.getItem("wallet") == 'Stoic') {
-      identity = login.onSignInStoic();
-      actor = await login.newActorStoic(identity);
-    } else if (localStorage.getItem('wallet') == 'Plug') {
-      await verifyConnectionAndAgent();
-      actor = login.newActorPlug(await login.onSignInPlug());
-    }
-
+    let actor = await login.newActor();
     const res = await actor.createFF({fTId: parseInt(form.id)}, form.answers);
     
     if (Object.keys(res) != 'err') {

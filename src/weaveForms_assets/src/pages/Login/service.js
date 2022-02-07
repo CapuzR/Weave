@@ -1,19 +1,22 @@
 import { AuthClient } from "@dfinity/auth-client"; 
 import {StoicIdentity} from "ic-stoic-identity";
 import { canisterId, createActor } from "../../../../declarations/weaveForms/index";
-const whitelist = [ canisterId, 'vttjj-zyaaa-aaaal-aabba-cai', 'aipdg-waaaa-aaaah-aaq5q-cai' ]
+const whitelist = [ canisterId, 'vttjj-zyaaa-aaaal-aabba-cai', 'aipdg-waaaa-aaaah-aaq5q-cai' ];
 import { idlFactory }  from '../../../../declarations/weaveForms/weaveForms.did.js';
+const network =
+  process.env.DFX_NETWORK ||
+  (process.env.NODE_ENV === "production" ? "ic" : "local");
+const host = network != "ic" ? "http://localhost:8080" : "https://mainnet.dfinity.network";
 
 export default {
   onSignInII,
   onSignInStoic,
   onSignOutStoic,
   onSignInPlug,
-  isAuth,
   verifyConnectionAndAgent,
   newActorPlug,
   newActorStoic,
-  newActor
+  newActor,
 };
 
 async function onSignInII() {
@@ -31,15 +34,6 @@ async function onSignInII() {
         : "http://localhost:8000?canisterId=rkp4c-7iaaa-aaaaa-aaaca-cai"
     });
 }
-
-async function isAuth(){
-  const identity = await StoicIdentity.load();
-    if (identity != false) {
-      return true;
-    } else {
-      return false;
-    }
-};
 
 async function onSignInStoic() {
   const identity = await StoicIdentity.load();
@@ -63,7 +57,8 @@ if (identity !== false) {
 
 async function onSignInPlug() {
 const isConnected = await window.ic.plug.requestConnect({
-  whitelist: whitelist
+  whitelist: whitelist,
+  host: host
 });
 if(isConnected) {
   // Get the user principal id
@@ -74,11 +69,12 @@ if(isConnected) {
 };
 
 async function verifyConnectionAndAgent() {
-const connected = await window.ic.plug.isConnected();
-if (!connected) window.ic.plug.requestConnect({ whitelist: whitelist });
-if (connected && !window.ic.plug.agent) {
-  await window.ic.plug.createAgent({ whitelist })
-}
+  const connected = await window.ic.plug.isConnected();
+  if (!connected) window.ic.plug.requestConnect({ whitelist: whitelist, host: host });
+  if (connected && !window.ic.plug.agent) {
+    await window.ic.plug.createAgent({ host, whitelist })
+    await window.ic.plug.agent.fetchRootKey();
+  }
 };
 
 async function newActorStoic(identity){
@@ -90,6 +86,7 @@ async function newActorStoic(identity){
 };
 
 async function newActorPlug(){
+  await verifyConnectionAndAgent();
   return await window.ic.plug.createActor({
     canisterId: canisterId,
     interfaceFactory: idlFactory
@@ -101,6 +98,6 @@ async function newActor(){
     return await newActorStoic(await onSignInStoic());
   } else if (localStorage.getItem('wallet') == 'Plug') {
     await verifyConnectionAndAgent();
-    return newActorPlug(await onSignInPlug());
+    return newActorPlug();
   }
 };

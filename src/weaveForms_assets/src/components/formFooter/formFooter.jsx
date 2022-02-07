@@ -19,7 +19,9 @@ function FormFooter(props) {
     const [ selNL, setSelNL ] = useState(props.state.selectedForm.nFTCol);
 
     useEffect(()=>{
-        getNFTList();
+        if (!NFTList) {
+            getNFTList();
+        }
     }, []);
 
     return (
@@ -100,23 +102,31 @@ function FormFooter(props) {
                 </Grid>
                 <Grid item xs={6}>
                     <Grid container alignItems="center" textAlign="center">
-                        <Grid item xs={6}>
+                        <Grid item xs={12}>
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">NFT List</InputLabel>
                                 <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={selNL}
+                                value={selNL.name}
                                 label="Age"
-                                onChange={(e)=>setSelNL(e.target.value)}
+                                onChange={(e, v)=>{
+                                    e.preventDefault();
+                                    setSelNL({name: NFTList[v.props.name].name, canisterId: NFTList[v.props.name].principal_id.toText(), standard: NFTList[v.props.name].standard});
+                                }}
                                 >
-                                {
-                                    NFTList &&
-                                    NFTList.map((coll)=> (
-                                        <MenuItem value={coll.name}>{coll.name}</MenuItem>
-                                    ))
-                                }
-                                <MenuItem value="None">None</MenuItem>
+                                    {
+                                        NFTList &&
+                                        NFTList.map((coll, i)=> (
+                                            <MenuItem 
+                                                name={i}
+                                                value={coll.name}
+                                            >
+                                                {coll.name}
+                                            </MenuItem>
+                                        ))
+                                    }
+                                    <MenuItem value="None">None</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
