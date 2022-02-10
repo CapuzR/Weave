@@ -87,7 +87,7 @@ function Form(props) {
 
   async function getFormData () {
       props.setLoading(true);
-      // const isAccessible = await service.isAccessible(formId);
+      const isAccessible = await service.isAccessible(formId);
       // if(isAccessible) {
         const formData = await service.getFormData(formId);
         if(formData){

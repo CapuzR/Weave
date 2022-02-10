@@ -30,20 +30,23 @@ export default {
 
 const getUserNFTs = async (nFTCol, principal, agent) => {
   const NFTActor = await getNFTActor({ canisterId: nFTCol.canisterId, agent: agent, standard: nFTCol.standard });
+  console.log('Pasa 3')
   await NFTActor.getUserTokens(Principal.fromText(principal));
+  console.log('nFTActor', await NFTActor.getUserTokens(Principal.fromText(principal)));
 }
 
 async function isAccessible(formId) {
 
   let actor = await login.newActor();
   let principal = JSON.parse(localStorage.getItem('_scApp')).principal;
-
+  console.log('pasa 1');
   //Recibe el canisterID de la colección
   const lockedFormBy = await actor.nFTGatedWith(parseInt(formId));
-
+  console.log('lockedFormBy', lockedFormBy)
   //consultar en DAB
 
     const agent = new HttpAgent({ host: host });
+    console.log('Pasa 2')
     await getUserNFTs(lockedFormBy.ok, principal, agent);
 
 };
