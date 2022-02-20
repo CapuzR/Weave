@@ -29,9 +29,6 @@
 		},
 		{
 			"path": "../../../non-fungible-token"
-		},
-		{
-			"path": "../../../weave-forms"
 		}
 	],
 	"settings": {}
