@@ -20,6 +20,18 @@
 		},
 		{
 			"path": "../../../cafeIC"
+		},
+		{
+			"path": "../../../photoUploader"
+		},
+		{
+			"path": "../../../ic-avatar"
+		},
+		{
+			"path": "../../../non-fungible-token"
+		},
+		{
+			"path": "../../../weave-forms"
 		}
 	],
 	"settings": {}

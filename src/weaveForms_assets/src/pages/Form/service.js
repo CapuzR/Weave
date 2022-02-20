@@ -30,7 +30,7 @@ export default {
 
 const getUserNFTs = async (nFTCol, principal, agent) => {
   const NFTActor = await getNFTActor({ canisterId: nFTCol.canisterId, agent: agent, standard: nFTCol.standard });
-  console.log('Pasa 3')
+  console.log('Pasa 3');
   await NFTActor.getUserTokens(Principal.fromText(principal));
   console.log('nFTActor', await NFTActor.getUserTokens(Principal.fromText(principal)));
 }

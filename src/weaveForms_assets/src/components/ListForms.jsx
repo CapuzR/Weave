@@ -125,7 +125,12 @@ const randomColors = [
 function ListForms(props) {
   // const classes = useStyles();
 
-  return props.state.forms.map((item, i) => (
+  return (
+    <>
+    {
+    props.state.forms &&
+    Object.keys(props.state.forms) != 'err' &&
+    props.state.forms.map((item, i) => (
     <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={item.id}>
       <Card>
         <CardMedia
@@ -200,7 +205,10 @@ function ListForms(props) {
         }
       </Card>
     </Grid>
-  ));
+  ))
+}
+</>
+)
 }
 
 export default ListForms;
